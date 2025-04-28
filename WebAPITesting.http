@@ -1,0 +1,36 @@
+@WebAPITesting_HostAddress = https://localhost:7069
+
+GET {{WebAPITesting_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{WebAPITesting_HostAddress}}/api/hotel
+
+###
+
+POST {{WebAPITesting_HostAddress}}/api/hotel
+Content-Type: application/json
+
+{
+  //Hotel
+}
+
+###
+
+GET {{WebAPITesting_HostAddress}}/api/hotel/1
+
+###
+
+DELETE {{WebAPITesting_HostAddress}}/api/hotel/0
+
+###
+
+PUT {{WebAPITesting_HostAddress}}/api/hotel/0
+Content-Type: application/json
+
+{
+  //Hotel
+}
+
+###
