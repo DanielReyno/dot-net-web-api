@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPITesting.Data;
+using WebAPITesting.Dtos.Country;
 
 namespace WebAPITesting.Controllers
 {
@@ -80,8 +81,13 @@ namespace WebAPITesting.Controllers
         // POST: api/Countries
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Country>> PostCountry(Country country)
+        public async Task<ActionResult<Country>> PostCountry(CreateCountryDto countryDto)
         {
+            Country country = new Country() 
+            {
+                Name = countryDto.Name,
+                ShortName = countryDto.ShortName,
+            };
             _context.Countries.Add(country);
             await _context.SaveChangesAsync();
 
