@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPITesting.Config;
 using WebAPITesting.Data;
 using WebAPITesting.Dtos.Country;
 
@@ -17,12 +19,15 @@ namespace WebAPITesting.Controllers
 
         //referencia del database context, esto nos ayudara a interactuar con los datos de la base de datos.
         private readonly HotelsDbContext _context;
+        private readonly IMapper _mapper;
+
 
 
         //Constructor que recibe la inyeccion del databaseContext.
-        public CountriesController(HotelsDbContext context)
+        public CountriesController(HotelsDbContext context, IMapper mapper)
         {
             _context = context;
+            this._mapper = mapper;
         }
 
         // GET: api/Countries
@@ -83,11 +88,17 @@ namespace WebAPITesting.Controllers
         [HttpPost]
         public async Task<ActionResult<Country>> PostCountry(CreateCountryDto countryDto)
         {
-            Country country = new Country() 
+            //Al utilizar un dto nos protejemos de los ataques de overposting ya que con esto logramos limitar la 
+            //cantidad de parametros que ingresan al controlador.
+            
+            Country countryOld = new Country() 
             {
                 Name = countryDto.Name,
                 ShortName = countryDto.ShortName,
             };
+
+            var country = _mapper.Map<Country>(countryDto);
+
             _context.Countries.Add(country);
             await _context.SaveChangesAsync();
 

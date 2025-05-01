@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using WebAPITesting.Config;
 using WebAPITesting.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,11 @@ builder.Services.AddCors(options =>
 builder.Host.UseSerilog((context, config) => 
 { 
     config.WriteTo.Console().ReadFrom.Configuration(context.Configuration);
+});
+
+builder.Services.AddAutoMapper(config => 
+{
+    config.AddProfile<MapperConfig>();
 });
 
 var app = builder.Build();

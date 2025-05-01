@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "vNFkFhzX0v+3WO49VUbhnk3r+i9QCkZ8oVEpDFgExd6sMQysJWV1UX57Mx39njCHnm9WKlrrcgGWsJ84nO+FCA==",
+  "dgSpecHash": "d8k88f2E4nJdsiLx5tLsop3B34Xn+2PHPTy94XaQL5HrmMGFH/dqLFPV8POC1E82chuxacBTZDIBliDP0CCfPg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Daniel\\Documents\\WebApi\\WebAPITesting\\WebAPITesting.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Daniel\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\Daniel\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Daniel\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
     "C:\\Users\\Daniel\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
