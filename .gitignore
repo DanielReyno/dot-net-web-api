@@ -3,3 +3,8 @@
 ################################################################################
 
 /.vs/WebAPITesting/FileContentIndex
+.vs/
+bin/
+obj/
+logs/
+*.csproj.user

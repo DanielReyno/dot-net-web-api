@@ -1,5 +1,0 @@
-2025-05-01 11:57:38.501 -04:00 [INF] Now listening on: https://localhost:7069
-2025-05-01 11:57:38.537 -04:00 [INF] Now listening on: http://localhost:5191
-2025-05-01 11:57:38.542 -04:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-05-01 11:57:38.543 -04:00 [INF] Hosting environment: Development
-2025-05-01 11:57:38.545 -04:00 [INF] Content root path: C:\Users\Daniel\Documents\WebApi\WebAPITesting
