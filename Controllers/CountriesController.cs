@@ -32,24 +32,25 @@ namespace WebAPITesting.Controllers
 
         // GET: api/Countries
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
         {
             var countries = await _context.Countries.ToListAsync();
-            return Ok(countries);
+            var mapped = _mapper.Map<List<GetCountryDto>>(countries);
+            return Ok(mapped);
         }
 
         // GET: api/Countries/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Country>> GetCountry(int id)
+        public async Task<ActionResult<CountryDetailsDto>> GetCountry(int id)
         {
-            var country = await _context.Countries.FindAsync(id);
-
+            var country = await _context.Countries.Include(c => c.Hotels).FirstOrDefaultAsync(c => c.CountryId == id);
             if (country == null)
             {
                 return NotFound();
             }
 
-            return Ok(country);
+            var mappedCountry = _mapper.Map<CountryDetailsDto>(country);
+            return Ok(mappedCountry);
         }
 
         // PUT: api/Countries/5
