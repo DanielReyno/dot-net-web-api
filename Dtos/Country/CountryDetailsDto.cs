@@ -2,11 +2,9 @@
 
 namespace WebAPITesting.Dtos.Country
 {
-    public class CountryDetailsDto
+    public class CountryDetailsDto : CountryBaseDto
     {
         public int CountryId { get; set; }
-        public string Name { get; set; }
-        public string ShortName { get; set; }
         public List<HotelsDetailsDto> Hotels {  get; set; }
 
     }

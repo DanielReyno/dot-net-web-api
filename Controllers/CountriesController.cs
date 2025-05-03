@@ -56,15 +56,22 @@ namespace WebAPITesting.Controllers
         // PUT: api/Countries/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCountry(int id, Country country)
+        public async Task<IActionResult> PutCountry(int id, UpdateCountryDto country)
         {
             if (id != country.CountryId)
             {
                 return BadRequest();
             }
+            //_context.Entry(country).State = EntityState.Modified;
 
-            _context.Entry(country).State = EntityState.Modified;
+            var data = await _context.Countries.FindAsync(id);
 
+            if(data == null)
+            {
+                return NotFound($"The id: {id} cannot be found");
+            }
+
+            _mapper.Map(country,data);
             try
             {
                 await _context.SaveChangesAsync();
