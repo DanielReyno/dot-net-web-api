@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPITesting.Data;
 using WebAPITesting.Dtos.Hotels;
+using WebAPITesting.IRepository;
 
 namespace WebAPITesting.Controllers
 {
@@ -15,12 +16,12 @@ namespace WebAPITesting.Controllers
     [ApiController]
     public class HotelsController : ControllerBase
     {
-        private readonly HotelsDbContext _context;
+        private readonly IHotelsRepository _repository;
         private readonly IMapper _mapper;
 
-        public HotelsController(HotelsDbContext context, IMapper mapper)
+        public HotelsController(IHotelsRepository repository ,IMapper mapper)
         {
-            _context = context;
+            this._repository = repository;
             this._mapper = mapper;
         }
 
@@ -28,7 +29,7 @@ namespace WebAPITesting.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetHotelDto>>> GetHotels()
         {
-            var hotels = await _context.Hotels.ToListAsync();
+            var hotels = await _repository.GetAllAsync();
             var mappedHotels = _mapper.Map<List<GetHotelDto>>(hotels);
             return Ok(mappedHotels);  
         }
@@ -37,7 +38,7 @@ namespace WebAPITesting.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<HotelsDetailsDto>> GetHotel(int id)
         {
-            var hotel = await _context.Hotels.Include(h => h.Country).FirstOrDefaultAsync(h => h.Id == id);
+            var hotel = await _repository.GetHotelDetailsAsync(id);
 
             if (hotel == null)
             {
@@ -59,7 +60,7 @@ namespace WebAPITesting.Controllers
                 return BadRequest();
             }
 
-            var entity = await _context.Hotels.FirstOrDefaultAsync(h => h.Id == id);
+            var entity = await _repository.GetAsync(id);
 
             if(entity == null)
             {
@@ -71,11 +72,11 @@ namespace WebAPITesting.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.UpdateAsync(entity);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!HotelExists(id))
+                if (!await HotelExists(id))
                 {
                     return NotFound();
                 }
@@ -93,15 +94,16 @@ namespace WebAPITesting.Controllers
         [HttpPost]
         public async Task<ActionResult<Hotel>> PostHotel(CreateHotelDto hotelDto)
         {
-            var checkCountryId = await _context.Countries.AnyAsync(c => c.CountryId == hotelDto.CountryId);
+            var checkCountryId = await _repository.CountryExistAsync(hotelDto.CountryId);
             if (!checkCountryId)
             {
-                return BadRequest($"countryId: {hotelDto.CountryId} doesn't exist");
+                return BadRequest();
             }
 
             var hotel = _mapper.Map<Hotel>(hotelDto); 
-            await _context.Hotels.AddAsync(hotel);
-            await _context.SaveChangesAsync();
+            //await _context.Hotels.AddAsync(hotel);
+            //await _context.SaveChangesAsync();
+            await _repository.AddAsync(hotel);
 
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
@@ -110,21 +112,23 @@ namespace WebAPITesting.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
-            var hotel = await _context.Hotels.FindAsync(id);
+            var hotel = await _repository.GetAsync(id);
             if (hotel == null)
             {
                 return NotFound();
             }
 
-            _context.Hotels.Remove(hotel);
-            await _context.SaveChangesAsync();
+            //_context.Hotels.Remove(hotel);
+            //await _context.SaveChangesAsync();
+
+            await _repository.DeleteAsync(hotel);
 
             return NoContent();
         }
 
-        private bool HotelExists(int id)
+        private async Task<bool> HotelExists(int id)
         {
-            return _context.Hotels.Any(e => e.Id == id);
+            return await _repository.Exists(id);
         }
     }
 }

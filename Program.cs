@@ -33,6 +33,7 @@ builder.Services.AddAutoMapper(config =>
 });
 
 builder.Services.AddScoped<ICountriesRepository, CountriesRepositoryImpl>();
+builder.Services.AddScoped<IHotelsRepository,  HotelsRepositoryImpl>();
 
 var app = builder.Build();
 
