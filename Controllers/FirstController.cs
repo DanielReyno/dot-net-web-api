@@ -8,7 +8,7 @@ namespace WebAPITesting.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HotelController : ControllerBase
+    public class FirstController : ControllerBase
     {
 
         public static List<Hotel> hotels = new List<Hotel>()

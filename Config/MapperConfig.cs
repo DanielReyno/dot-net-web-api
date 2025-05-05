@@ -14,7 +14,9 @@ namespace WebAPITesting.Config
             CreateMap<Country, CountryDetailsDto>().ReverseMap();
             CreateMap<Country, UpdateCountryDto>().ReverseMap();
 
-
+            CreateMap<Hotel, UpdateHotelDto>().ReverseMap();
+            CreateMap<Hotel, GetHotelDto>().ReverseMap();
+            CreateMap<Hotel, CreateHotelDto>().ReverseMap();
             CreateMap<Hotel, HotelsDetailsDto>().ReverseMap();
         }
     }
