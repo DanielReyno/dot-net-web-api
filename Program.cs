@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WebAPITesting.Config;
 using WebAPITesting.Data;
+using WebAPITesting.IRepository;
+using WebAPITesting.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -30,6 +31,8 @@ builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<MapperConfig>();
 });
+
+builder.Services.AddScoped<ICountriesRepository, CountriesRepositoryImpl>();
 
 var app = builder.Build();
 

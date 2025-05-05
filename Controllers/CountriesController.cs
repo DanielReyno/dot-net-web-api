@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPITesting.Config;
 using WebAPITesting.Data;
 using WebAPITesting.Dtos.Country;
+using WebAPITesting.IRepository;
 
 namespace WebAPITesting.Controllers
 {
@@ -16,17 +17,15 @@ namespace WebAPITesting.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
-
-        //referencia del database context, esto nos ayudara a interactuar con los datos de la base de datos.
-        private readonly HotelsDbContext _context;
+        private readonly ICountriesRepository _repository;
         private readonly IMapper _mapper;
 
 
 
         //Constructor que recibe la inyeccion del databaseContext.
-        public CountriesController(HotelsDbContext context, IMapper mapper)
+        public CountriesController(ICountriesRepository repository,IMapper mapper)
         {
-            _context = context;
+            this._repository = repository;
             this._mapper = mapper;
         }
 
@@ -34,7 +33,7 @@ namespace WebAPITesting.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
         {
-            var countries = await _context.Countries.ToListAsync();
+            var countries = await _repository.GetAllAsync();
             var mapped = _mapper.Map<List<GetCountryDto>>(countries);
             return Ok(mapped);
         }
@@ -43,7 +42,7 @@ namespace WebAPITesting.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CountryDetailsDto>> GetCountry(int id)
         {
-            var country = await _context.Countries.Include(c => c.Hotels).FirstOrDefaultAsync(c => c.CountryId == id);
+            var country = await _repository.GetCountryDetailsAsync(id);
             if (country == null)
             {
                 return NotFound();
@@ -64,7 +63,7 @@ namespace WebAPITesting.Controllers
             }
             //_context.Entry(country).State = EntityState.Modified;
 
-            var data = await _context.Countries.FindAsync(id);
+            var data = await _repository.GetAsync(id);
 
             if(data == null)
             {
@@ -74,11 +73,11 @@ namespace WebAPITesting.Controllers
             _mapper.Map(country,data);
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.UpdateAsync(data);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CountryExists(id))
+                if (!await CountryExists(id))
                 {
                     return NotFound();
                 }
@@ -107,8 +106,7 @@ namespace WebAPITesting.Controllers
 
             var country = _mapper.Map<Country>(countryDto);
 
-            _context.Countries.Add(country);
-            await _context.SaveChangesAsync();
+            await _repository.AddAsync(country);
 
             return CreatedAtAction("GetCountry", new { id = country.CountryId }, country);
         }
@@ -117,21 +115,20 @@ namespace WebAPITesting.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCountry(int id)
         {
-            var country = await _context.Countries.FindAsync(id);
+            var country = await _repository.GetAsync(id);
             if (country == null)
             {
                 return NotFound();
             }
 
-            _context.Countries.Remove(country);
-            await _context.SaveChangesAsync();
+            await _repository.DeleteAsync(country);
 
             return NoContent();
         }
 
-        private bool CountryExists(int id)
+        private async Task<bool> CountryExists(int id)
         {
-            return _context.Countries.Any(e => e.CountryId == id);
+            return await _repository.Exists(id);
         }
     }
 }
