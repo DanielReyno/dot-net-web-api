@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WebAPITesting.Config;
@@ -12,6 +13,12 @@ var connectionString = builder.Configuration.GetConnectionString("HotelsDbConnec
 builder.Services.AddDbContext<HotelsDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
+builder.Services.AddIdentityCore<UserAccount>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<HotelsDbContext>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>

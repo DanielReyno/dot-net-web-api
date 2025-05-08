@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using WebAPITesting.Data.Config;
 
 namespace WebAPITesting.Data
 {
-    public class HotelsDbContext : DbContext
+    public class HotelsDbContext : IdentityDbContext<UserAccount>
     {
         public HotelsDbContext(DbContextOptions<HotelsDbContext> options) : base(options)
         {
@@ -17,54 +19,10 @@ namespace WebAPITesting.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Country>().HasData([
-                new Country
-                {
-                    CountryId = 1,
-                    Name = "Republica Dominicana",
-                    ShortName = "Rep Dom",
 
-                },
-                new Country
-                {
-                    CountryId = 2,
-                    Name = "Estados Unidos",
-                    ShortName = "US",
-
-                },
-                new Country
-                {
-                    CountryId = 3,
-                    Name = "Espana",
-                    ShortName = "ES"
-                }
-            ]);
-            modelBuilder.Entity<Hotel>().HasData([
-                new Hotel
-                {
-                    Id = 1,
-                    Name = "Hotel Punta cana",
-                    Location = "Punta cana",
-                    Price = 500,
-                    CountryId =  1
-                },
-                new Hotel
-                {
-                    Id = 2,
-                    Name = "Los Angeles Hotel",
-                    Location = "Los angeles",
-                    Price = 1000,
-                    CountryId = 2
-                },
-                new Hotel
-                {
-                    Id = 3,
-                    Name = "Hotel Real",
-                    Location = "Madrid",
-                    Price = 800,
-                    CountryId = 3
-                }
-            ]);
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new CountryConfiguration());
+            modelBuilder.ApplyConfiguration(new HotelConfiguration());
         }
 
     }
