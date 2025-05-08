@@ -17,6 +17,18 @@ namespace WebAPITesting.Repository
             this._mapper = mapper;
             this._manager = manager;
         }
+
+        public async Task<bool> LoginAsync(UserLoginDto loginDto)
+        {
+            var findUser = await _manager.FindByNameAsync(loginDto.UserName);
+            if (findUser == null)
+            {
+                return default;
+            }
+            var canLogin = await _manager.CheckPasswordAsync(findUser, loginDto.Password);
+            return canLogin;
+        }
+
         public async Task<IEnumerable<IdentityError>> RegisterAsync(UserAccountDto userDto)
         {
             var userMapped = _mapper.Map<UserAccount>(userDto);

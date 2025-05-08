@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using WebAPITesting.Dtos.User;
 using WebAPITesting.IRepository;
@@ -20,6 +21,9 @@ namespace WebAPITesting.Controllers
 
         [HttpPost]
         [Route("register")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Resgister([FromBody] UserAccountDto userDto)
         {
             var registerResult = await _userManager.RegisterAsync(userDto);
@@ -32,6 +36,25 @@ namespace WebAPITesting.Controllers
 
                 }
                 return BadRequest(ModelState);
+            }
+
+            return Ok();
+
+        }
+
+
+        [HttpPost]
+        [Route("login")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> Login([FromBody] UserLoginDto userDto)
+        {
+            var loginResult = await _userManager.LoginAsync(userDto);
+
+            if (!loginResult)
+            {
+                return Unauthorized();
             }
 
             return Ok();
