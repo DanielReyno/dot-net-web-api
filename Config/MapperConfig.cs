@@ -2,6 +2,7 @@
 using WebAPITesting.Data;
 using WebAPITesting.Dtos.Country;
 using WebAPITesting.Dtos.Hotels;
+using WebAPITesting.Dtos.User;
 
 namespace WebAPITesting.Config
 {
@@ -18,6 +19,8 @@ namespace WebAPITesting.Config
             CreateMap<Hotel, GetHotelDto>().ReverseMap();
             CreateMap<Hotel, CreateHotelDto>().ReverseMap();
             CreateMap<Hotel, HotelsDetailsDto>().ReverseMap();
+
+            CreateMap<UserAccount, UserAccountDto>().ReverseMap();
         }
     }
 }

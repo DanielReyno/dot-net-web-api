@@ -41,6 +41,7 @@ builder.Services.AddAutoMapper(config =>
 
 builder.Services.AddScoped<ICountriesRepository, CountriesRepositoryImpl>();
 builder.Services.AddScoped<IHotelsRepository,  HotelsRepositoryImpl>();
+builder.Services.AddScoped<IUserAuthentication, UserAuthenticationImpl>();
 
 var app = builder.Build();
 
