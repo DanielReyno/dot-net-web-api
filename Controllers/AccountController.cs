@@ -50,14 +50,14 @@ namespace WebAPITesting.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Login([FromBody] UserLoginDto userDto)
         {
-            var loginResult = await _userManager.LoginAsync(userDto);
+            var authResponse = await _userManager.LoginAsync(userDto);
 
-            if (!loginResult)
+            if (authResponse == null)
             {
                 return Unauthorized();
             }
 
-            return Ok();
+            return Ok(authResponse);
 
         }
     }

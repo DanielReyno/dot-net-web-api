@@ -7,6 +7,6 @@ namespace WebAPITesting.IRepository
     {
         public Task<IEnumerable<IdentityError>> RegisterAsync(UserAccountDto userDto);
 
-        public Task<bool> LoginAsync(UserLoginDto loginDto);
+        public Task<AuthResponseDto> LoginAsync(UserLoginDto loginDto);
     }
 }
