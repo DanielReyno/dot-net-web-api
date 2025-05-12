@@ -116,7 +116,7 @@ namespace WebAPITesting.Controllers
 
         // DELETE: api/Countries/5
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteCountry(int id)
         {
             var country = await _repository.GetAsync(id);
